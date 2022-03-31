@@ -1,7 +1,10 @@
 import cv2
 import pandas as pd
 import numpy as np
+import argparse
 
+ap = argparse.ArgumentParser()
+ap.add_argument('-i', '--image', required=True, helpp="Image Path")
 
 img_path = r'ColorWheel.png'
 img = cv2.imread(img_path)
