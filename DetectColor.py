@@ -1,82 +1,57 @@
-from turtle import width
 import cv2
+import pandas as pd
 import numpy as np
-
-cap = cv2.VideoCapture(0)
-
-while True:
-    ret, frame = cap.read()
-    width = int(cap.get(3))
-    height = int(cap.get(4))
-
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    lower_blue = np.array([110,50,50])
-    upper_blue = np.array([130,255,255])
-
-    mask = cv2.inRange(hsv, lower_blue, upper_blue)
-
-    cv2.imshow('frame',hsv)
-
-    if cv2.waitKey(1) == ord('q'):
-        break
-
-cap.realease()
-cv2.destroyAllWindows()
-
-# import cv2
-# import pandas as pd
-# import numpy as np
-# import argparse
+import argparse
 
 # ap = argparse.ArgumentParser()
 # ap.add_argument('-i', '--image', required=True, help="Image Path")
 # args = vars(ap.parse_args())
 
-# img_path = args['image']
-# img = cv2.imread(img_path)
+img_path = args['image']
+img = cv2.imread(img_path)
 
-# clicked = False
-# r = g = b = x_pos = y_pos = 0
+clicked = False
+r = g = b = x_pos = y_pos = 0
 
-# index = ["color","color_name","hex","R","G","B"]
-# csv = pd.read_csv('SomeColors.csv', names=index, header=None)
+index = ["color","color_name","hex","R","G","B"]
+csv = pd.read_csv('SomeColors.csv', names=index, header=None)
 
-# def get_color_name(R,G,B):
-#     minimum = 10000
-#     for i in range(len(csv)):
-#         dis = abs(R-int(csv.loc[i,"R"])) + abs(G-int(csv.loc[i,"G"])) + abs(B-int(csv.loc[i,"B"]))
-#         if dis <= minimum:
-#             minimum = dis
-#             cname = csv.loc[i,"color_name"]
-#     return cname
+def get_color_name(R,G,B):
+    minimum = 10000
+    for i in range(len(csv)):
+        dis = abs(R-int(csv.loc[i,"R"])) + abs(G-int(csv.loc[i,"G"])) + abs(B-int(csv.loc[i,"B"]))
+        if dis <= minimum:
+            minimum = dis
+            cname = csv.loc[i,"color_name"]
+    return cname
 
-# def draw_func(event,x,y,flags,param):
-#     if event == cv2.EVENT_LBUTTONDBLCLK:
-#         global b,g,r,x_pos,y_pos,clicked
-#         clicked = True
-#         x_pos = x
-#         y_pos = y
-#         b,g,r = img[y,x]
-#         b = int(b)
-#         g = int(g)
-#         r = int(r)
+def draw_func(event,x,y,flags,param):
+    if event == cv2.EVENT_LBUTTONDBLCLK:
+        global b,g,r,x_pos,y_pos,clicked
+        clicked = True
+        x_pos = x
+        y_pos = y
+        b,g,r = img[y,x]
+        b = int(b)
+        g = int(g)
+        r = int(r)
 
-# cv2.namedWindow('image')
-# cv2.setMouseCallback('image',draw_func)
+cv2.namedWindow('image')
+cv2.setMouseCallback('image',draw_func)
 
-# while True:
-#     cv2.imshow("image",img)
-#     if clicked:
-#         cv2.rectangle(img,(20,20),(750,60),(b,g,r),-1)
-#         text = get_color_name(r,g,b) + ' R=' +str(r) + ' G=' +str(g) + ' B=' +str(b)
-#         cv2.putText(img,text,(50,50),2,0.8,(255,255,255),2,cv2.LINE_AA)
+while True:
+    cv2.imshow("image",img)
+    if clicked:
+        cv2.rectangle(img,(20,20),(750,60),(b,g,r),-1)
+        text = get_color_name(r,g,b) + ' R=' +str(r) + ' G=' +str(g) + ' B=' +str(b)
+        cv2.putText(img,text,(50,50),2,0.8,(255,255,255),2,cv2.LINE_AA)
         
-#         if r+g+b >= 600:
-#             cv2.putText(img,text,(50,50),2,0.8,(0,0,0),2,cv2.LINE_AA)
+        if r+g+b >= 600:
+            cv2.putText(img,text,(50,50),2,0.8,(0,0,0),2,cv2.LINE_AA)
 
-#         clicked = False
+        clicked = False
 
-#     if cv2.waitKey(20) & 0xFF ==27:
-#         break
+    if cv2.waitKey(20) & 0xFF ==27:
+        break
 
-# cv2.destroyAllWindows()
+cv2.destroyAllWindows()
